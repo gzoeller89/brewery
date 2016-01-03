@@ -1,11 +1,24 @@
+var pm = require('./utils/port-manager');
+var gpio = require('pi-gpio');
 var express = require('express');
+
+
+
 var app = express();
 
-app.get('/', function(req, res){
-  console.log('Hey Fuck you');
-  res.send('hello world');
+pm.clean();
+pm.open();
+
+app.get('/:port/on', function(req, res){
+  gpio.write(req.params.port,1);
+  res.sendStatus(200);
 });
 
-app.listen(8080, function(){
-  console.log('listening on port 8080');
+app.get('/:port/off', function(req, res){
+  gpio.write(req.params.port,0);
+  res.sendStatus(200);
+});
+
+var server = app.listen(3000, function(){
+  console.log('running');
 });
